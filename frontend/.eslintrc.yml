@@ -1,0 +1,40 @@
+env:
+    browser: true
+    es2021: true
+    jest/globals: true
+extends:
+    - plugin:react/recommended
+    - airbnb
+    - plugin:jest/recommended
+overrides: []
+parserOptions:
+    ecmaVersion: latest
+    sourceType: module
+plugins:
+    - react
+    - jest
+rules:
+    {
+        brace-style: [error, stroustrup],
+        linebreak-style: off,
+        import/prefer-default-export: off,
+        import/no-extraneous-dependencies: [error, { devDependencies: true }],
+        indent: [error, 4],
+        no-param-reassign: [2, { props: false }],
+        object-curly-newline:
+            [
+                error,
+                {
+                    ImportDeclaration: { multiline: true, minProperties: 4 },
+                    ExportDeclaration: { multiline: true, minProperties: 4 },
+                },
+            ],
+        react/prop-types: off,
+        prefer-destructuring: [error, { object: true, array: false }],
+        react/function-component-definition: [2, { namedComponents: arrow-function }],
+        react/jsx-filename-extension: [1, { extensions: [.js, .jsx] }],
+        react/jsx-indent: [error, 4],
+        react/jsx-indent-props: [error, 4],
+        react/jsx-one-expression-per-line: off,
+        react/react-in-jsx-scope: off,
+    }
