@@ -1,12 +1,10 @@
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
-import { TablePageContainer } from './containers';
-
-import { Template } from './pages/Template';
+import { AllCoursesPageContainer, TablePageContainer } from './containers';
 
 const App = () => (
     <BrowserRouter>
         <Routes>
-            <Route exact path="/" element={<Template />} />
+            <Route exact path="/" element={<AllCoursesPageContainer />} />
             <Route exact path="/student/:keywords" element={<TablePageContainer />} />
             <Route path="*" element={<> </>} />
         </Routes>

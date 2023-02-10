@@ -1,11 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { fetchStudentData, sendRegisterRequest } from '../services/sheetsApi';
+import { fetchAllCourses, fetchStudentData, sendRegisterRequest } from '../services/sheetsApi';
 import { FAIL, LOADING, OK } from '../utils/constants';
 import { DateFormatter } from '../utils/formatters/DateFormatter';
 import { RegisterTextFormatter } from '../utils/formatters/RegisterTextFormatter';
 
 const initialState = {
     dataStatus: LOADING,
+    allCourses: [],
     studentInfo: {
         id: '',
         name: '',
@@ -16,6 +17,31 @@ const initialState = {
     registerMessage: {},
     registeringMap: {},
 };
+
+export const getAllCourses = createAsyncThunk('allCourses/fetchAllCourses', async () => {
+    const response = await fetchAllCourses();
+    const weekCoursesMap = {
+        一: [],
+        二: [],
+        三: [],
+        四: [],
+        五: [],
+        六: [],
+        日: [],
+    };
+    response.data.courses.forEach((course) => {
+        const week = course.substr(1, 1);
+        weekCoursesMap[week].push(course);
+    });
+    const result = [];
+    Object.keys(weekCoursesMap).forEach((key) => {
+        result.push({
+            week: key,
+            courses: weekCoursesMap[key],
+        });
+    });
+    return result;
+});
 
 export const getStudentData = createAsyncThunk(
     'sheets/fetchStudentData',
@@ -79,6 +105,14 @@ export const sheetsSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+            .addCase(getAllCourses.fulfilled, (state, action) => {
+                state.dataStatus = OK;
+                state.allCourses = action.payload;
+            })
+            .addCase(getAllCourses.rejected, (state) => {
+                state.dataStatus = FAIL;
+            });
+        builder
             .addCase(getStudentData.fulfilled, (state, action) => {
                 state.dataStatus = OK;
                 const { info, courses, courseHomeworks } = action.payload;
@@ -109,6 +143,7 @@ export const sheetsSlice = createSlice({
 
 export const { register } = sheetsSlice.actions;
 
+export const selectAllCourses = (state) => state.sheets.allCourses;
 export const selectDataStatus = (state) => state.sheets.dataStatus;
 export const selectStudentInfo = (state) => state.sheets.studentInfo;
 export const selectStudentCourses = (state) => state.sheets.studentCourses;
