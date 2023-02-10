@@ -2,6 +2,10 @@ import { DateFormatter } from './DateFormatter';
 
 export class RegisterTextFormatter {
     static formatWithPlus(text) {
+        if (typeof text !== 'string') {
+            return text;
+        }
+
         if (text === '') {
             return text;
         }
